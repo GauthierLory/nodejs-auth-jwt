@@ -3,15 +3,12 @@ const jwt = require('jsonwebtoken')
 const { findUserPerId } = require('../queries/user.queries')
 const { app } = require('../app')
 
-/**
- * Création d'un JWT
- * @param user - token pour le user
- * @returns {token}
- */
-exports.createJwtToken = (user) => {
+const createJwtToken = (user) => {
     const jwtToken = jwt.sign({ sub: user._id.toString()}, secret);
     return jwtToken;
 }
+
+exports.createJwtToken = createJwtToken;
 
 const extractUserFromToken = async (req, res, next) => {
     const token = req.cookies.jwt;
@@ -35,4 +32,15 @@ const extractUserFromToken = async (req, res, next) => {
     }
 }
 
+const addJwtFeatures = (req, res, next) => {
+    req.isAuthenticate = () => !!req.user;
+    req.logout = () => res.clearCookie('jwt')
+    req.login = (user) => {
+        const token = createJwtToken(user)
+        res.cookie('jwt', token);
+    }
+    next();
+}
+
 app.use(extractUserFromToken);
+app.use(addJwtFeatures);
