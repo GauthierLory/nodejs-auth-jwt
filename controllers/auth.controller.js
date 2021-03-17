@@ -1,5 +1,3 @@
-const passport = require('passport')
-
 exports.sessionNew = (req, res, next) => {
     res.render('auth/signin', { error: null })
 }
