@@ -4,7 +4,10 @@ const { findUserPerId } = require('../queries/user.queries')
 const { app } = require('../app')
 
 const createJwtToken = (user) => {
-    const jwtToken = jwt.sign({ sub: user._id.toString()}, secret);
+    const jwtToken = jwt.sign({
+        sub: user._id.toString(),
+        exp: Math.floor(Date.now() / 1000) + 60 + 60 * 24
+    }, secret);
     return jwtToken;
 }
 
@@ -33,7 +36,7 @@ const extractUserFromToken = async (req, res, next) => {
 }
 
 const addJwtFeatures = (req, res, next) => {
-    req.isAuthenticate = () => !!req.user;
+    req.isAuthenticated = () => !!req.user;
     req.logout = () => res.clearCookie('jwt')
     req.login = (user) => {
         const token = createJwtToken(user)

@@ -6,7 +6,7 @@ const { ensureAuthenticated } = require('../config/security.config')
 router.use('/users', userRoutes);
 router.use('/auth', authRoutes);
 
-router.get('/',  ensureAuthenticated, (req, res) => {
+router.get('/', (req, res) => {
     res.render('index', { user: req.user });
   });
 
