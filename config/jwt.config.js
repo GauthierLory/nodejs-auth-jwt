@@ -1,4 +1,5 @@
-const secret = '02c1b350-30b3-4256-adde-af7471439d42';
+require('dotenv').config()
+const secret = process.env.JWT_secret;
 const jwt = require('jsonwebtoken')
 const { findUserPerId } = require('../queries/user.queries')
 const { app } = require('../app')
